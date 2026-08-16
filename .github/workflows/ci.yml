@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Install ruff
+        run: python -m pip install --disable-pip-version-check -r requirements-lint.txt
+
+      - name: Ruff
+        run: ruff check .
+
+  test:
+    name: test (${{ matrix.os }}, python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        # 3.11 is the floor the plugin claims, because that is where `tomllib`
+        # arrived. The upper entry catches deprecations early.
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # The runtime path is standard library only on purpose: herdr invokes the
+      # manifest's bare `python3` with a minimal PATH, so nothing here installs
+      # anything before running the suite.
+      - name: Test
+        run: python -m unittest discover -s tests -p 'test_*.py' --verbose
+
+  font:
+    name: font
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Install the font build environment
+        run: python -m pip install --disable-pip-version-check -r requirements-font.txt
+
+      # tests/test_font.py asserts both that the build is reproducible and that
+      # the committed dist/ file matches it byte for byte, so a mark changed
+      # without rebuilding the font fails here.
+      - name: Font structure and reproducibility
+        run: python -m unittest tests.test_font --verbose
+
+      - name: Confirm the committed font is unchanged by a rebuild
+        run: |
+          python tools/build_font.py
+          git diff --exit-code -- dist/

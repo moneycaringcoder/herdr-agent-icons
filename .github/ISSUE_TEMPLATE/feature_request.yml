@@ -1,0 +1,59 @@
+name: Feature request
+description: Suggest something agent-icons should do
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ideas are welcome. A few things the project has already decided against,
+        so you know before you write:
+
+        - **Taking over `display_agent` or the state icon.** The plugin reports
+          one token and leaves herdr's lifecycle state alone. That separation is
+          the design, not an oversight.
+        - **Colour or ANSI inside the token.** herdr 0.8.0 metadata is plain
+          text. Styling belongs in your sidebar row configuration, where it can
+          follow your theme.
+        - **Installing the font for you.** No writing to font directories, no
+          `fc-cache`, no editing a terminal configuration.
+        - **Moving an existing codepoint.** `U+E1A0` through `U+E1A3` are fixed;
+          people have terminal configuration pinned to them.
+
+        If your idea is one of those, say why the reasoning above is wrong —
+        that is a perfectly good issue to open.
+
+        **Adding a harness is the most likely useful request.** It needs a mark
+        whose licence and upstream commit can be established, so a link to the
+        exact file upstream is the most helpful thing you can include.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is awkward today
+      description: The situation you are in, rather than the feature you have in mind.
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you would like instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: provenance
+    attributes:
+      label: If this is a new harness, where its mark comes from
+      description: >
+        A link to the exact file in the upstream repository, the commit it is at,
+        and the licence that file is under. A mark whose provenance cannot be
+        established cannot ship, however good it looks.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you tried instead
+      description: >
+        Including whether a static string in your own sidebar row configuration,
+        or `rows_by_agent`, already covers it.

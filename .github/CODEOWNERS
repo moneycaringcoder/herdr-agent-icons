@@ -1,0 +1,14 @@
+# Every change requests a review from the maintainer automatically.
+# This is about staying informed, not about gatekeeping: contributions are
+# welcome and reviewed personally.
+*       @moneycaringcoder
+
+# The files that carry a published contract. agent_icons.py is the only code
+# that talks to herdr, the codepoint table and the marks it is built from cannot
+# move once users have configured a terminal against them, and the notices are
+# what makes shipping those marks lawful.
+/agent_icons.py                     @moneycaringcoder
+/font/codepoints.toml               @moneycaringcoder
+/tools/build_font.py                @moneycaringcoder
+/assets/                            @moneycaringcoder
+/dist/                              @moneycaringcoder

@@ -1,0 +1,23 @@
+# The runtime path targets the oldest Python that ships `tomllib`, because the
+# manifest invokes a bare `python3` on the user's machine rather than a virtual
+# environment we control.
+target-version = "py311"
+line-length = 110
+exclude = [".venv-font"]
+
+[lint]
+select = [
+    "E4",   # pycodestyle: imports
+    "E7",   # pycodestyle: statements
+    "E9",   # pycodestyle: syntax and IO errors
+    "F",    # pyflakes
+    "I",    # isort
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "EXE",  # flake8-executable: shebangs must match the executable bit
+]
+
+[lint.per-file-ignores]
+# The suite imports the plugin modules from the repository root, which has to be
+# put on sys.path first — there is no package to install.
+"tests/test_agent_icons.py" = ["E402"]

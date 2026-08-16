@@ -1,0 +1,97 @@
+name: Bug report
+description: Something behaves differently than it should
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. Redact paths and workspace
+        names freely — a report with `/home/you/repos/app` in it is just as
+        useful as one with your real paths.
+
+        **If the plugin changed anything other than the `harness_logo` token,
+        please say so in the first line.** It must never touch `display_agent`,
+        the state icon, or the semantic agent status, and a case where it did is
+        the most serious class of bug this project has.
+
+        A box, a blank, or the wrong glyph in the sidebar is usually a font
+        installation or terminal configuration question rather than a bug, and
+        it is still a perfectly good issue to open — the answer belongs in the
+        README if it is not there already.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you saw in the sidebar, and what you expected instead.
+      placeholder: |
+        The Codex pane shows a tofu box, and the text fallback never appears.
+    validations:
+      required: true
+
+  - type: input
+    id: variant
+    attributes:
+      label: Which variant is selected
+      description: >
+        `auto`, `font`, `text`, or `none` — the `variant` line in the plugin's
+        `config.toml`, or "unset" if you have never picked one.
+    validations:
+      required: true
+
+  - type: textarea
+    id: preview
+    attributes:
+      label: Output of `python3 preview.py`
+      description: >
+        This carries the codepoints, the measured cell widths, and whether
+        Fontconfig can see the font, which is usually enough to find the problem
+        on its own.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: font
+    attributes:
+      label: What the font stack says
+      description: >
+        On Linux, `fc-match --format '%{family}\n' 'Herdr Harness Logos'`. On
+        Ghostty, `ghostty +list-fonts | grep -F 'Herdr Harness Logos'` and the
+        `font-family` and `font-codepoint-map` lines from your configuration.
+        Leave this out if you are using the text fallback.
+      render: shell
+
+  - type: textarea
+    id: sidebar
+    attributes:
+      label: Your sidebar row configuration
+      description: The `[ui.sidebar.agents]` section of your herdr configuration.
+      render: toml
+
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions
+      description: Output of `herdr --version` and `python3 --version`.
+      render: shell
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: terminal
+    attributes:
+      label: Terminal
+      description: Ghostty, kitty, WezTerm, Alacritty, Terminal.app, and its version.

@@ -1,0 +1,28 @@
+id = "moneycaringcoder.agent-icons"
+name = "Herdr Agent Icons"
+version = "0.2.0"
+min_herdr_version = "0.8.0"
+description = "Add Unicode icons to supported agent display names without replacing Herdr status state."
+platforms = ["linux", "macos", "windows"]
+
+[[startup]]
+command = ["python3", "agent_icons.py"]
+
+[[events]]
+on = "pane.agent_detected"
+command = ["python3", "agent_icons.py"]
+
+[[actions]]
+id = "refresh"
+title = "Harness logos: refresh"
+description = "Reapply the selected logo variant to current panes."
+contexts = ["global"]
+command = ["python3", "agent_icons.py"]
+
+[[panes]]
+id = "preview"
+title = "Harness logo preview"
+placement = "popup"
+width = 72
+height = 18
+command = ["python3", "preview.py", "--pick"]

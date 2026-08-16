@@ -1,0 +1,21 @@
+# The plugin itself has no dependencies at all; the two requirements files hold
+# build and lint tools only. Updates are grouped into a single monthly pull
+# request rather than arriving one at a time.
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    groups:
+      python:
+        patterns: ["*"]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]

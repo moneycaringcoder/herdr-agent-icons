@@ -1,0 +1,8 @@
+family = "Herdr Harness Logos"
+version = "1.0.0"
+
+[glyphs]
+claude = "E1A0"
+codex = "E1A1"
+opencode = "E1A2"
+omp = "E1A3"
