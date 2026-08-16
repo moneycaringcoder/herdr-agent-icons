@@ -75,6 +75,41 @@ to a real Herdr, and it refuses to run unless `HERDR_SESSION` is `icon-lab` and
 `HERDR_SOCKET_PATH` sits under `/sessions/icon-lab/`, so it cannot touch a
 session you were working in. It clears its token in a `finally` block.
 
+Run it before a release. CI cannot: it needs a live Herdr with a recognised
+agent in a pane, which no runner has. That makes it the only check that the
+whole path actually works — the fake `herdr` in the suite proves the plugin
+asks for the right thing, not that Herdr answers.
+
+Start the session from a terminal that is **not** already inside Herdr, because
+Herdr refuses to nest unless `[experimental] allow_nested` is set:
+
+```sh
+herdr --session icon-lab
+```
+
+Then, from anywhere, put a supported agent in a pane of that session and point
+the test at it:
+
+```sh
+HERDR_SOCKET_PATH=~/.config/herdr/sessions/icon-lab/herdr.sock \
+  herdr agent start iconlab --kind claude --pane <pane-id>
+
+HERDR_SESSION=icon-lab \
+HERDR_SOCKET_PATH=~/.config/herdr/sessions/icon-lab/herdr.sock \
+HERDR_PANE_ID=<pane-id> \
+  python3 tests/live_icon_lab.py
+```
+
+It prints one JSON line and exits `0`. The `harness_logo` value in that line
+looks blank in most terminals — it is a private-use codepoint, and a font that
+has no glyph for it renders nothing. Blank output there is expected and is not
+the test passing vacuously: the assertion compares against the exact expected
+codepoint, so a missing or wrong token fails. To see the value itself, read the
+token back with `herdr pane get <pane-id>` while it is set.
+
+Last run: 2026-08-16, against Herdr 0.8.0, with a `claude` agent. Update this
+line when you run it, so a stale pass is visible as stale.
+
 ## What makes a change easy to merge
 
 **A test that fails before your fix and passes after it.** This matters here
