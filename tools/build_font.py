@@ -22,6 +22,17 @@ ADVANCE = 600
 ASCENT = 800
 DESCENT = -200
 FONT_TIMESTAMP = 2082844800  # 1970-01-01 in OpenType's 1904 epoch.
+STABLE_GLYPH_ORDER = (
+    "claude",
+    "codex",
+    "opencode",
+    "omp",
+    "cline",
+    "mastracode",
+    "kimi",
+    "kilo",
+    "maki",
+)
 
 
 def svg_glyph(path: Path):
@@ -49,7 +60,7 @@ def build(output: Path) -> None:
     with (ROOT / "font" / "codepoints.toml").open("rb") as config_file:
         config = tomllib.load(config_file)
     names = list(config["glyphs"])
-    if names != ["claude", "codex", "opencode", "omp"]:
+    if names != list(STABLE_GLYPH_ORDER):
         raise ValueError("codepoint order is part of the stable font contract")
     codepoints = {int(value, 16): name for name, value in config["glyphs"].items()}
     if len(codepoints) != len(names):

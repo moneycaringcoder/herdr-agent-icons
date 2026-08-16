@@ -28,6 +28,11 @@ class AgentIconsTests(unittest.TestCase):
                 "codex": "U+E1A1",
                 "opencode": "U+E1A2",
                 "omp": "U+E1A3",
+                "cline": "U+E1A4",
+                "mastracode": "U+E1A5",
+                "kimi": "U+E1A6",
+                "kilo": "U+E1A7",
+                "maki": "U+E1A8",
             },
         )
 
@@ -37,6 +42,11 @@ class AgentIconsTests(unittest.TestCase):
             self.assertEqual(agent_icons.logo_for("codex", "auto"), "AI")
             self.assertEqual(agent_icons.logo_for("opencode", "auto"), "OC")
             self.assertEqual(agent_icons.logo_for("omp", "auto"), "OMP")
+            self.assertEqual(agent_icons.logo_for("cline", "auto"), "CL")
+            self.assertEqual(agent_icons.logo_for("mastracode", "auto"), "MC")
+            self.assertEqual(agent_icons.logo_for("kimi", "auto"), "KIM")
+            self.assertEqual(agent_icons.logo_for("kilo", "auto"), "KIL")
+            self.assertEqual(agent_icons.logo_for("maki", "auto"), "MAK")
 
     def test_all_variants_are_narrow_printable_text(self) -> None:
         for logo in (*agent_icons.PUA_LOGOS.values(), *agent_icons.TEXT_LOGOS.values()):
@@ -83,7 +93,12 @@ if sys.argv[1:] == ["pane", "list"]:
         {"pane_id": "w1:p2", "agent": "codex"},
         {"pane_id": "w1:p3", "agent": "opencode"},
         {"pane_id": "w1:p4", "agent": "omp"},
-        {"pane_id": "w1:p5", "agent": "gemini"}
+        {"pane_id": "w1:p5", "agent": "cline"},
+        {"pane_id": "w1:p6", "agent": "mastracode"},
+        {"pane_id": "w1:p7", "agent": "kimi"},
+        {"pane_id": "w1:p8", "agent": "kilo"},
+        {"pane_id": "w1:p9", "agent": "maki"},
+        {"pane_id": "w1:p10", "agent": "gemini"}
     ]}}))
 """,
                 encoding="utf-8",
@@ -107,18 +122,23 @@ if sys.argv[1:] == ["pane", "list"]:
 
             self.assertEqual(result.returncode, 0, result.stderr)
             calls = [json.loads(line) for line in calls_path.read_text().splitlines()]
-            self.assertEqual(len(calls), 6)
+            self.assertEqual(len(calls), 11)
             reports = calls[1:]
             self.assertEqual(
-                [report[-1] for report in reports[:4]],
+                [report[-1] for report in reports[:9]],
                 [
                     "harness_logo=\ue1a0",
                     "harness_logo=\ue1a1",
                     "harness_logo=\ue1a2",
                     "harness_logo=\ue1a3",
+                    "harness_logo=\ue1a4",
+                    "harness_logo=\ue1a5",
+                    "harness_logo=\ue1a6",
+                    "harness_logo=\ue1a7",
+                    "harness_logo=\ue1a8",
                 ],
             )
-            self.assertEqual(reports[4][-2:], ["--clear-token", "harness_logo"])
+            self.assertEqual(reports[9][-2:], ["--clear-token", "harness_logo"])
             for report in reports:
                 self.assertEqual(report[:2], ["pane", "report-metadata"])
                 self.assertNotIn("report-agent", report)
@@ -169,7 +189,19 @@ if sys.argv[1:] == ["pane", "list"]:
             first = preview.preview()
             second = preview.preview()
         self.assertEqual(first, second)
-        for value in ("Claude", "Codex", "OpenCode", "OMP", "U+E1A0", "U+E1A3"):
+        for value in (
+            "Claude",
+            "Codex",
+            "OpenCode",
+            "OMP",
+            "Cline",
+            "MastraCode",
+            "Kimi",
+            "Kilo",
+            "Maki",
+            "U+E1A0",
+            "U+E1A8",
+        ):
             self.assertIn(value, first)
         self.assertNotIn("\x1b", first)
 

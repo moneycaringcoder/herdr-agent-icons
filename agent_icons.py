@@ -21,12 +21,22 @@ PUA_LOGOS = {
     "codex": "\ue1a1",
     "opencode": "\ue1a2",
     "omp": "\ue1a3",
+    "cline": "\ue1a4",
+    "mastracode": "\ue1a5",
+    "kimi": "\ue1a6",
+    "kilo": "\ue1a7",
+    "maki": "\ue1a8",
 }
 TEXT_LOGOS = {
     "claude": "C",
     "codex": "AI",
     "opencode": "OC",
     "omp": "OMP",
+    "cline": "CL",
+    "mastracode": "MC",
+    "kimi": "KIM",
+    "kilo": "KIL",
+    "maki": "MAK",
 }
 VARIANTS = ("auto", "font", "text", "none")
 
