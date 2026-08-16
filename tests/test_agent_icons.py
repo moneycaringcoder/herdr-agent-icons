@@ -48,9 +48,7 @@ class AgentIconsTests(unittest.TestCase):
 
     def test_unsupported_agent_clears_owned_token(self) -> None:
         with mock.patch.object(agent_icons, "run_herdr", return_value={}) as run:
-            self.assertFalse(
-                agent_icons.report_logo("herdr", "test:icons", "w1:p1", "gemini", "font")
-            )
+            self.assertFalse(agent_icons.report_logo("herdr", "test:icons", "w1:p1", "gemini", "font"))
         self.assertEqual(
             run.call_args.args,
             (
@@ -66,9 +64,7 @@ class AgentIconsTests(unittest.TestCase):
         )
 
     def test_event_pane_accepts_event_envelope(self) -> None:
-        raw = json.dumps(
-            {"event": {"type": "pane_agent_detected", "pane_id": "w1:p4", "agent": "omp"}}
-        )
+        raw = json.dumps({"event": {"type": "pane_agent_detected", "pane_id": "w1:p4", "agent": "omp"}})
         self.assertEqual(agent_icons.event_pane(raw), "w1:p4")
 
     def test_startup_reports_token_only_and_preserves_status_surface(self) -> None:

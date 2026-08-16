@@ -22,6 +22,11 @@ jobs:
       - name: Ruff
         run: ruff check .
 
+      # Checked, not applied. A formatter that rewrites in CI produces a green
+      # run over code nobody reviewed in the shape it landed in.
+      - name: Ruff format
+        run: ruff format --check .
+
   test:
     name: test (${{ matrix.os }}, python ${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}

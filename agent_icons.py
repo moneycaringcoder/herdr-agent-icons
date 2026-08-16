@@ -101,9 +101,7 @@ def logo_for(agent: str, variant: str) -> str | None:
     return PUA_LOGOS[agent] if variant == "font" else TEXT_LOGOS[agent]
 
 
-def report_logo(
-    herdr: str, source: str, pane_id: str, agent: str | None, variant: str
-) -> bool:
+def report_logo(herdr: str, source: str, pane_id: str, agent: str | None, variant: str) -> bool:
     logo = logo_for(agent, variant) if agent is not None else None
     arguments = [
         "pane",

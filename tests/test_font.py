@@ -17,7 +17,11 @@ ROOT = Path(__file__).resolve().parents[1]
 class FontTests(unittest.TestCase):
     def test_committed_font_contract(self) -> None:
         font = TTFont(ROOT / "dist" / "HerdrHarnessLogos-Regular.ttf")
-        self.assertTrue({"head", "hhea", "maxp", "OS/2", "hmtx", "cmap", "glyf", "loca", "name", "post"}.issubset(font.keys()))
+        self.assertTrue(
+            {"head", "hhea", "maxp", "OS/2", "hmtx", "cmap", "glyf", "loca", "name", "post"}.issubset(
+                font.keys()
+            )
+        )
         self.assertFalse({"SVG ", "COLR", "CPAL", "CBDT", "fvar"}.intersection(font.keys()))
         cmap = font.getBestCmap()
         self.assertEqual(
