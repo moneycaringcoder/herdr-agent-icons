@@ -1,0 +1,111 @@
+name: Herdr upstream canary
+
+# Advisory only. This job watches Herdr's development branch so that an upstream
+# change to the surface agent-icons depends on is found here rather than in a
+# bug report. It is scheduled and manual only: it never runs on a pull request,
+# it is not a required status check in the branch ruleset, and its job name does
+# not collide with any of the required contexts (`lint`, `font`, and the four
+# `test (os, python version)` jobs). A red canary means "go and look at Herdr
+# master", never "this pull request is bad".
+
+on:
+  schedule:
+    - cron: "07 5 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: herdr-upstream-canary
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    name: herdr master API contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Prove the contract checks can fail
+        # Runs before the fetch on purpose. If these tests do not pass, the
+        # checks below are not trustworthy and a green result would mean
+        # nothing. 3.11 is the floor the plugin claims, so the checks are
+        # exercised on the oldest interpreter a user might have.
+        run: |
+          python tools/test_herdr_api_contract.py
+          python tools/test_herdr_cli_contract.py
+
+      - name: Resolve Herdr master
+        id: resolve
+        run: |
+          set -euo pipefail
+          record="$(timeout 30s git -c protocol.version=2 ls-remote --exit-code \
+            https://github.com/herdrdev/herdr.git refs/heads/master)"
+          sha="$(printf '%s' "$record" | cut -f1)"
+          if [[ ! "$sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "ls-remote did not return one full lowercase master SHA" >&2
+            exit 1
+          fi
+          printf 'Herdr master: %s\n' "$sha"
+          printf 'sha=%s\n' "$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch the generated API schema and the CLI reference
+        env:
+          HERDR_SHA: ${{ steps.resolve.outputs.sha }}
+        run: |
+          set -euo pipefail
+          # Herdr generates the schema from its own types and fails its test
+          # suite when it drifts, so it is the running server's surface rather
+          # than hand-written documentation. The CLI reference is prose and is
+          # not enforced that way; see tools/herdr_cli_contract.py. Both are
+          # pinned to the resolved SHA so nothing can disagree with the
+          # reported revision.
+          base="https://raw.githubusercontent.com/herdrdev/herdr/${HERDR_SHA}"
+          curl --fail --silent --show-error --location \
+            --max-time 60 --max-filesize 4194304 \
+            --output "$RUNNER_TEMP/herdr-api.schema.json" \
+            "${base}/docs/next/api/herdr-api.schema.json"
+          curl --fail --silent --show-error --location \
+            --max-time 60 --max-filesize 1048576 \
+            --output "$RUNNER_TEMP/cli-reference.mdx" \
+            "${base}/docs/next/website/src/content/docs/cli-reference.mdx"
+
+      - name: Check the API surface agent-icons depends on
+        run: |
+          set -euo pipefail
+          python tools/herdr_api_contract.py "$RUNNER_TEMP/herdr-api.schema.json" \
+            | tee "$RUNNER_TEMP/contract.txt"
+
+      - name: Check the CLI surface agent-icons depends on
+        run: |
+          set -euo pipefail
+          python tools/herdr_cli_contract.py "$RUNNER_TEMP/cli-reference.mdx" \
+            | tee "$RUNNER_TEMP/cli.txt"
+
+      - name: Record the advisory result
+        if: always()
+        env:
+          HERDR_SHA: ${{ steps.resolve.outputs.sha }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -uo pipefail
+          {
+            echo "## Herdr upstream canary"
+            echo
+            echo "- Herdr master: \`${HERDR_SHA:-unresolved}\`"
+            printf -- '- API: `%s`\n' \
+              "$(cat "$RUNNER_TEMP/contract.txt" 2>/dev/null || echo 'not reached')"
+            printf -- '- CLI: `%s`\n' \
+              "$(cat "$RUNNER_TEMP/cli.txt" 2>/dev/null || echo 'not reached')"
+            echo "- Result: \`${JOB_STATUS}\`"
+            echo
+            echo "Advisory only. A failure here is a signal to read Herdr's"
+            echo "recent changes, not a reason to hold any pull request."
+          } >> "$GITHUB_STEP_SUMMARY"

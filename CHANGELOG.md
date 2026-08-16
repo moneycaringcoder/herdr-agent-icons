@@ -6,6 +6,17 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- An advisory upstream canary. Once a day it resolves one exact herdr `master`
+  commit and checks two things against it: the API schema herdr generates from
+  its own types, for the three methods behind the CLI commands this plugin runs
+  and the pane fields it reads, and herdr's CLI reference, for the subcommand
+  and flag spellings — which are not in the schema and would break every code
+  path here if they were renamed. It is scheduled and manual only, it is not a
+  required check, and a red canary is a signal to read herdr's recent changes
+  rather than a reason to hold a pull request.
+
 ## [0.2.0] - 2026-08-16
 
 First public release. Earlier versions existed only locally and were never
