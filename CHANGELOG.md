@@ -8,6 +8,14 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- Tag-triggered release automation. Pushing `vX.Y.Z` runs the lint, test and
+  font jobs and publishes the GitHub release with notes taken from that
+  version's changelog section — but only after an identity gate has confirmed
+  that the tag and `herdr-plugin.toml` name the same version and that the
+  changelog section for it exists and is not empty. The manifest version is the
+  one the marketplace displays. The bundled typeface keeps its own independent
+  version, which tracks the marks it contains rather than the plugin around
+  them.
 - An advisory upstream canary. Once a day it resolves one exact herdr `master`
   commit and checks two things against it: the API schema herdr generates from
   its own types, for the three methods behind the CLI commands this plugin runs
