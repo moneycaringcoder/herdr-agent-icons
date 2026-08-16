@@ -14,6 +14,11 @@ AGENT_NAMES = {
     "codex": "Codex",
     "opencode": "OpenCode",
     "omp": "OMP",
+    "cline": "Cline",
+    "mastracode": "MastraCode",
+    "kimi": "Kimi",
+    "kilo": "Kilo",
+    "maki": "Maki",
 }
 
 
@@ -22,13 +27,13 @@ def preview() -> str:
         "Herdr harness logo variants (plain terminal text; no ANSI)",
         f"Custom font detected: {'yes' if font_available() else 'no'}",
         "",
-        "Harness   Font (PUA)       Text fallback",
-        "--------  ---------------  -------------",
+        "Harness     Font (PUA)       Text fallback",
+        "----------  ---------------  -------------",
     ]
     for agent, name in AGENT_NAMES.items():
         glyph = PUA_LOGOS[agent]
         lines.append(
-            f"{name:<8}  {glyph} U+{ord(glyph):04X} (w={cell_width(glyph)})  "
+            f"{name:<10}  {glyph} U+{ord(glyph):04X} (w={cell_width(glyph)})  "
             f"{TEXT_LOGOS[agent]:<3} (w={cell_width(TEXT_LOGOS[agent])})"
         )
     lines.extend(
