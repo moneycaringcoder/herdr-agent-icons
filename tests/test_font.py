@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import tempfile
+import tomllib
 import unittest
 from pathlib import Path
 
@@ -11,6 +12,31 @@ except ImportError:  # Build-only checks run in the font virtual environment.
 
 
 ROOT = Path(__file__).resolve().parents[1]
+EXPECTED_GLYPHS = [
+    "claude",
+    "codex",
+    "opencode",
+    "omp",
+    "cline",
+    "mastracode",
+    "kimi",
+    "kilo",
+    "maki",
+]
+EXPECTED_CMAP = {0xE1A0 + offset: name for offset, name in enumerate(EXPECTED_GLYPHS)}
+
+
+class FontSourceTests(unittest.TestCase):
+    def test_codepoints_and_svg_sources_match(self) -> None:
+        with (ROOT / "font" / "codepoints.toml").open("rb") as config_file:
+            glyphs = tomllib.load(config_file)["glyphs"]
+        svg_names = {path.stem for path in (ROOT / "assets" / "svg").glob("*.svg")}
+
+        self.assertEqual(list(glyphs), EXPECTED_GLYPHS)
+        self.assertEqual([int(value, 16) for value in glyphs.values()], list(EXPECTED_CMAP))
+        self.assertEqual(set(glyphs), svg_names)
+
+
 
 
 @unittest.skipIf(TTFont is None, "fontTools is a build-only dependency")
@@ -24,11 +50,8 @@ class FontTests(unittest.TestCase):
         )
         self.assertFalse({"SVG ", "COLR", "CPAL", "CBDT", "fvar"}.intersection(font.keys()))
         cmap = font.getBestCmap()
-        self.assertEqual(
-            cmap,
-            {0xE1A0: "claude", 0xE1A1: "codex", 0xE1A2: "opencode", 0xE1A3: "omp"},
-        )
-        self.assertEqual(font.getGlyphOrder(), [".notdef", "claude", "codex", "opencode", "omp"])
+        self.assertEqual(cmap, EXPECTED_CMAP)
+        self.assertEqual(font.getGlyphOrder(), [".notdef", *EXPECTED_GLYPHS])
         self.assertEqual(font["post"].isFixedPitch, 1)
         for name in cmap.values():
             self.assertEqual(font["hmtx"].metrics[name][0], 600)

@@ -8,6 +8,10 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- Licensed terminal marks for Cline, MastraCode, Kimi Code CLI, Kilo Code, and
+  Maki, appended at `U+E1A4` through `U+E1A8` without moving the four published
+  assignments. Herdr-recognized harnesses without a safely reusable mark remain
+  deliberately unmarked.
 - Tag-triggered release automation. Pushing `vX.Y.Z` runs the lint, test and
   font jobs and publishes the GitHub release with notes taken from that
   version's changelog section — but only after an identity gate has confirmed

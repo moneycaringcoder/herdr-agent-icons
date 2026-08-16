@@ -1,6 +1,6 @@
 # Herdr Harness Logos
 
-A minimal Herdr v1 plugin that gives the sidebar recognizable monochrome harness marks for Claude, Codex, OpenCode, and OMP without taking over Herdr lifecycle state.
+A minimal Herdr v1 plugin that gives the sidebar recognizable monochrome harness marks for Claude, Codex, OpenCode, OMP, Cline, MastraCode, Kimi, Kilo, and Maki without taking over Herdr lifecycle state.
 
 ## Requirements
 
@@ -25,8 +25,15 @@ Herdr 0.8.0 metadata is plain text. `display_agent` does not accept ANSI, images
 | Codex / OpenAI | `U+E1A1` | `AI` |
 | OpenCode | `U+E1A2` | `OC` |
 | OMP | `U+E1A3` | `OMP` |
+| Cline | `U+E1A4` | `CL` |
+| MastraCode | `U+E1A5` | `MC` |
+| Kimi Code CLI | `U+E1A6` | `KIM` |
+| Kilo Code CLI | `U+E1A7` | `KIL` |
+| Maki | `U+E1A8` | `MAK` |
 
 The codepoints are stable BMP Private Use Area assignments. Every font glyph has a fixed 600-unit advance and is intended to occupy one terminal cell. The text fallback contains printable ASCII only.
+
+Herdr-recognized harnesses without a safely reusable mark remain deliberately unmarked. The plugin clears its owned token for those agents instead of guessing at a logo or leaving a stale mark.
 
 The plugin never calls `report-agent`, changes `display_agent`, or reports state labels. Configure the sidebar with separate `state_icon`, `$harness_logo`, and `agent` tokens so Herdr retains its native colored lifecycle icon and semantic `idle`, `working`, `blocked`, `done`, or `unknown` state.
 
@@ -85,7 +92,7 @@ Add these lines to your Ghostty configuration manually. Keep your existing prima
 ```ini
 font-family = "JetBrains Mono"
 font-family = "Herdr Harness Logos"
-font-codepoint-map = U+E1A0-U+E1A3="Herdr Harness Logos"
+font-codepoint-map = U+E1A0-U+E1A8="Herdr Harness Logos"
 ```
 
 Replace `JetBrains Mono` with your actual primary family when different. Do not reset the font list with `font-family = ""` unless you intentionally want to replace all existing fallbacks.
@@ -94,11 +101,11 @@ Open a new Ghostty window, tab, or split, then verify:
 
 ```sh
 ghostty +list-fonts | grep -F 'Herdr Harness Logos'
-ghostty +show-face --string=''
+ghostty +show-face --string=''
 python3 preview.py
 ```
 
-The literal characters in the `--string` argument are `U+E1A0` through `U+E1A3`. On macOS, where `fc-match` may be unavailable, select `font` explicitly after Ghostty confirms the face; `auto` deliberately remains on the safe text fallback when it cannot verify the family.
+The literal characters in the `--string` argument are `U+E1A0` through `U+E1A8`. On macOS, where `fc-match` may be unavailable, select `font` explicitly after Ghostty confirms the face; `auto` deliberately remains on the safe text fallback when it cannot verify the family.
 
 To uninstall manually, remove the copied TTF, refresh Fontconfig on Linux, remove the two Ghostty lines, and open a new terminal surface.
 

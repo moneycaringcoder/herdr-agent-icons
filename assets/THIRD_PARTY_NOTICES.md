@@ -30,4 +30,39 @@ The source marks are used only to identify the corresponding third-party harness
 - Modification: colors and opacity removed; geometry flattened to monochrome and scaled for a terminal font.
 - Upstream license: <https://github.com/can1357/oh-my-pi/blob/ffd53ff92a6f575d499730475a73460dd7cc2eea/LICENSE>
 
+## Cline
+
+- Source: Cline Bot `cline`, `apps/vscode/assets/icons/icon.svg`, commit `8bbdde2a5c1f972864fe1b954f639c21fac61a40`.
+- License: Apache License 2.0, Copyright 2026 Cline Bot Inc.
+- Modification: wrapper geometry removed, strokes expanded to simple monochrome paths, and small details simplified for terminal size.
+- Upstream license: <https://github.com/cline/cline/blob/8bbdde2a5c1f972864fe1b954f639c21fac61a40/LICENSE>
+
+## MastraCode
+
+- Source: Mastra `mastra`, `mastracode/factory-ui/src/ui/public/mastra.svg`, commit `c71b21e60fe642ada98a0ad06324b017494848c7`.
+- License: Apache License 2.0, Copyright (c) 2025 Kepler Software, Inc.
+- Modification: responsive styling removed and the mark normalized to monochrome.
+- Upstream license: <https://github.com/mastra-ai/mastra/blob/c71b21e60fe642ada98a0ad06324b017494848c7/LICENSE.md>
+
+## Kimi Code CLI
+
+- Source: Moonshot AI `kimi-cli`, `web/public/logo.png`, commit `cbc15c076d17f70fec9f89c90c0502e68657f505`.
+- License: Apache License 2.0, copyright the Kimi CLI repository contributors.
+- Modification: raster mark redrawn as a monochrome vector; rounded background and colour removed while retaining the K and dot at terminal size.
+- Upstream license: <https://github.com/MoonshotAI/kimi-cli/blob/cbc15c076d17f70fec9f89c90c0502e68657f505/LICENSE>
+
+## Kilo Code
+
+- Source: Kilo Code `kilocode`, `packages/kilo-docs/public/favicon/favicon.svg`, commit `90a93a7aa25950d5894fa67f6e4e6545ef55017c`.
+- License: MIT, Copyright (c) 2026 Kilo Code; Copyright (c) 2025 opencode.
+- Modification: colour background removed; rectangles and polygons flattened to monochrome paths while retaining the coarse 32-pixel brand geometry.
+- Upstream license: <https://github.com/Kilo-Org/kilocode/blob/90a93a7aa25950d5894fa67f6e4e6545ef55017c/LICENSE>
+
+## Maki
+
+- Source: Tony Solomonik `maki`, `site/favicon-32x32.png`, commit `18465acf19c6b870d29d827dfc12fc6a21e9d945`.
+- License: MIT, Copyright (c) 2026 Tony Solomonik.
+- Modification: pixel-art cat-in-cup mark redrawn as a coarse monochrome silhouette; colour, shading, facial detail, and the textured saucer were removed.
+- Upstream license: <https://github.com/tontinton/maki/blob/18465acf19c6b870d29d827dfc12fc6a21e9d945/LICENSE>
+
 The complete Apache-2.0 and MIT license texts are included in `assets/licenses/`.
